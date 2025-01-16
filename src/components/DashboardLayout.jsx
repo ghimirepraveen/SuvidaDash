@@ -66,8 +66,9 @@ const DashboardLayout = ({ children }) => {
               <Link to="/service/requested">Requested</Link>
             </Menu.Item>
           </SubMenu>
+
           <Menu.Item key="2" icon={<ProductOutlined />}>
-            <Link to="/service-name">ServiceName</Link>
+            <Link to="/servicename">ServiceName</Link>
           </Menu.Item>
 
           <Menu.Item key="3" icon={<SettingOutlined />}>

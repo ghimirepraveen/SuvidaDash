@@ -1,4 +1,3 @@
-// src/api/FetchOrgData.js
 import axiosInstance from "./axiosInstance";
 
 const fetchOrgData = async (query) => {
@@ -12,8 +11,9 @@ const fetchOrgData = async (query) => {
   const response = await axiosInstance.get("/org", { params: finalQuery });
   return response.data;
 };
+
 const fetchServiceData = async (query, organizationId) => {
-  console.log("fetchServiceData called with:", query, organizationId); // Add this log
+  console.log("fetchServiceData called with:", query, organizationId);
   try {
     const response = await axiosInstance.get(`/service/org/${organizationId}`, {
       params: query,
@@ -26,7 +26,7 @@ const fetchServiceData = async (query, organizationId) => {
 };
 
 const fetchRequestedOrgData = async (query) => {
-  const { filter, ...filteredQuery } = query;
+  const { ...filteredQuery } = query;
   const finalQuery = Object.fromEntries(
     Object.entries(filteredQuery).filter(
       ([_, value]) => value !== "" && value !== undefined

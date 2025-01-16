@@ -1,5 +1,5 @@
-import { useQuery } from "react-query";
-import fetchServiceName from "../api/FetchServiceNameData";
+import { useQuery } from "@tanstack/react-query";
+import { fetchServiceName } from "../api/FetchServiceNameData";
 
 const useServiceNameData = (query) => {
   return useQuery({
@@ -8,6 +8,7 @@ const useServiceNameData = (query) => {
     onError: (error) => {
       console.error("Error fetching service name data:", error);
     },
+    keepPreviousData: true, // Keeps old data during refetch
   });
 };
 

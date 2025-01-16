@@ -1,91 +1,90 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DashboardLayout from "../components/DashboardLayout";
-import ServiceNameTable from "../components/serviceNameTable";
-import { Input, Select, message } from "antd";
+import ServiceNameTable from "../components/ServiceNameTable";
+import { Input, message, Spin, Alert, Button, Modal, Form, Switch } from "antd";
 import useServiceNameData from "../hooks/useServiceName";
+import { addServiceName } from "../api/FetchServiceNameData";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const ServiceNameAll = () => {
   const [search, setSearch] = useState("");
   const [isActive, setIsActive] = useState(undefined);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [total, setTotal] = useState(0);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [form] = Form.useForm();
 
-  // const [query, setQuery] = useState({
-  //   page: 1,
-  //   limit: 10,
-  //   search: "",
-  //   isActive: "",
-  // });
+  const queryClient = useQueryClient();
 
-  const { data, isLoading, isError, error } = useServiceNameData();
+  const { data, isLoading, isError, error } = useServiceNameData({
+    search,
+    isActive,
+  });
 
-  //console.log("data", data);
-  // Update `isActive` state when filter changes
-  // const handleIsActiveChange = (value) => {
-  //   setIsActive(value);
-  //   setQuery((prevQuery) => ({
-  //     ...prevQuery,
-  //     isActive: value,
-  //     page: 1, // Reset to the first page when the filter changes
-  //   }));
-  // };
-  // const handleSearchChange = (e) => {
-  //   setSearch(e.target.value);
-  // };
-  // const handleSearch = () => {
-  //   if (search.trim() === "") {
-  //     message.error("Search text is not allowed to be empty");
-  //     return;
-  //   }
-  //   setQuery((prevQuery) => ({
-  //     ...prevQuery,
-  //     search: search.trim(),
-  //     page: 1, // Reset to the first page when a new search is performed
-  //   }));
-  // };
+  const mutation = useMutation({
+    mutationFn: addServiceName,
+    onSuccess: () => {
+      message.success("Service name added successfully!");
+      queryClient.invalidateQueries({ queryKey: ["serviceData"] });
+      setIsModalVisible(false);
+      form.resetFields();
+    },
+    onError: () => {
+      message.error("Failed to add service name.");
+    },
+  });
+
+  const handleOk = () => {
+    form
+      .validateFields()
+      .then((values) => {
+        mutation.mutate({
+          name: values.name,
+          isActive: values.isActive,
+        });
+      })
+      .catch((info) => {
+        console.log("Validate Failed:", info);
+      });
+  };
+
+  if (isLoading) return <Spin tip="Loading..." />;
+  if (isError)
+    return <Alert message="Error" description={error.message} type="error" />;
+
   return (
     <DashboardLayout>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: "16px",
-        }}
+      {/* <Button type="primary" onClick={() => setIsModalVisible(true)}>
+        Add Service Name
+      </Button> */}
+
+      <ServiceNameTable data={data || []} />
+
+      <Modal
+        title="Add Service Name"
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={() => setIsModalVisible(false)}
+        confirmLoading={mutation.isLoading}
       >
-        <div style={{ display: "flex", gap: "8px", marginLeft: "auto" }}>
-          <Select
-            placeholder="Filter by Active Status"
-            style={{ width: 200 }}
-            // onChange={handleIsActiveChange}
-            value={isActive}
-            allowClear
+        <Form form={form} layout="vertical">
+          <Form.Item
+            name="name"
+            label="Service Name"
+            rules={[
+              { required: true, message: "Please input the service name!" },
+            ]}
           >
-            <Select.Option value="true">Active</Select.Option>
-            <Select.Option value="false">Inactive</Select.Option>
-          </Select>
-          <Input.Search
-            placeholder="Search here"
-            style={{ width: 200 }}
-            // onChange={handleSearchChange}
-            value={search}
-            // onSearch={handleSearch}
-          />
-        </div>
-      </div>
-      <ServiceNameTable
-        data={data}
-        isLoading={isLoading}
-        isError={isError}
-        // onPageChange={(page, pageSize) => {
-        //   setQuery((prevQuery) => ({
-        //     ...prevQuery,
-        //     page,
-        //     limit: pageSize,
-        //   }));
-        // }}
-      />
-      {isError && <p>Error loading data: {error.message}</p>}
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="isActive"
+            label="Is Active"
+            valuePropName="checked"
+            initialValue={true}
+          >
+            <Switch />
+          </Form.Item>
+        </Form>
+      </Modal>
     </DashboardLayout>
   );
 };

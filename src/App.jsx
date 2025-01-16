@@ -8,12 +8,23 @@ import Service from "./pages/ServiceAll";
 import ServiceDetails from "./pages/serviceDetail";
 import OrganizationDetailsPage from "./pages/organizationDetails";
 import NameService from "./pages/ServiceNameAll";
+import Dashboard from "./pages/dasboard";
 
 const App = () => {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
+
+        <Route
+          path="/dashboard"
+          element={
+            <AuthenticatedRoutes>
+              <Dashboard />
+            </AuthenticatedRoutes>
+          }
+        />
+
         <Route
           path="/organization/requested"
           element={
@@ -47,7 +58,7 @@ const App = () => {
           }
         />
         <Route
-          path="/service-name"
+          path="/servicename"
           element={
             <AuthenticatedRoutes>
               <NameService />
