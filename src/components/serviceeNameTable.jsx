@@ -24,7 +24,7 @@ import {
 } from "../api/FetchServiceNameData";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const ServiceNameTable = ({ data, isLoading, isError, onPageChange }) => {
+const ServiceeNameTable1 = ({ data, isLoading, isError, onPageChange }) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -254,4 +254,4 @@ const ServiceNameTable = ({ data, isLoading, isError, onPageChange }) => {
   );
 };
 
-export default ServiceNameTable;
+export default ServiceeNameTable1;

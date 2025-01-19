@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "../components/DashboardLayout";
-import ServiceNameTable from "../components/ServiceNameTable";
+import ServiceNameTable from "../components/serviceeNameTable";
 import { Input, message, Spin, Alert, Button, Modal, Form, Switch } from "antd";
 import useServiceNameData from "../hooks/useServiceName";
 import { addServiceName } from "../api/FetchServiceNameData";
