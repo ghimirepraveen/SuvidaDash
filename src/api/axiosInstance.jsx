@@ -2,7 +2,7 @@ import axios from "axios";
 import { useRefreshToken } from "../hooks/useRefreshToken";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:4040/api",
+  baseURL: "https://suvidha-3.onrender.com/api",
 });
 
 axiosInstance.interceptors.request.use((config) => {
