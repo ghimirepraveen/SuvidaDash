@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import DashboardLayout from "../components/DashboardLayout";
-import ServiceTable from "../components/serviceNameTable";
+import ServiceTable from "../components/serviceeNameTable";
 import { Input, Select, message } from "antd";
 import { useServiceData } from "../hooks/useServiceData";
 
