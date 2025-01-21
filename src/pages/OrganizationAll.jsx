@@ -1,18 +1,13 @@
-// src/pages/OrganizationAll.js
-
 import React, { useState } from "react";
 import DashboardLayout from "../components/DashboardLayout";
 import OrganizationTable from "../components/OrganizationTable";
-import { Input, Select, message } from "antd";
+import { Input, Select, message, Pagination } from "antd";
 import { useOrgData } from "../hooks/useOrgData";
 
 const OrganizationAll = ({ dataSource }) => {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState(undefined);
   const [isBlocked, setIsBlocked] = useState(undefined);
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
-  const [total, setTotal] = useState(0);
 
   const [query, setQuery] = useState({
     page: 1,
@@ -60,8 +55,12 @@ const OrganizationAll = ({ dataSource }) => {
     }));
   };
 
-  const updateTotalCount = (count) => {
-    setTotal(count);
+  const handlePaginationChange = (page, pageSize) => {
+    setQuery((prevQuery) => ({
+      ...prevQuery,
+      page,
+      limit: pageSize,
+    }));
   };
 
   return (
@@ -108,12 +107,17 @@ const OrganizationAll = ({ dataSource }) => {
           />
         </div>
       </div>
-      <OrganizationTable
-        data={data}
-        query={query}
-        dataSource={dataSource}
-        updateTotalCount={updateTotalCount}
-      />
+      <OrganizationTable data={data} />
+      {data?.data && (
+        <Pagination
+          current={query.page}
+          pageSize={query.limit}
+          total={data.data.totalDocs}
+          onChange={handlePaginationChange}
+          showSizeChanger
+          pageSizeOptions={["10", "20", "50"]}
+        />
+      )}
       {isError && <p>Error loading data: {error.message}</p>}
     </DashboardLayout>
   );

@@ -29,7 +29,6 @@ const { Title, Text } = Typography;
 
 const OrganizationDetailsPage = () => {
   const { id: organizationId } = useParams();
-  console.log("Organization id is ", organizationId);
   const navigate = useNavigate();
 
   const {
@@ -66,9 +65,14 @@ const OrganizationDetailsPage = () => {
   };
 
   const handleBlockToggle = () => {
-    toggleOrganizationStatus({ organizationId, isBlocked: !isBlocked });
+    toggleOrganizationStatus({
+      organizationId,
+      isBlocked: !organizationData.isBlocked,
+    });
     message.success(
-      `Organization ${isBlocked ? "unblocked" : "blocked"} successfully`
+      `Organization ${
+        organizationData.isBlocked ? "unblocked" : "blocked"
+      } successfully`
     );
   };
 
@@ -96,21 +100,25 @@ const OrganizationDetailsPage = () => {
 
   const organizationData = organizationDetails?.data || {};
   const {
-    nameorg,
+    nameOrg,
     intro,
     address,
-    contactperson,
-    contactphno,
-    panno,
+    contactPerson,
+    contactNumber,
+    panNo,
     rating,
-    ratedby,
-    totalrating,
+    ratedBy,
+    message,
+    totalRating,
     isActive,
     isBlocked,
     status,
     createdAt,
-    services = [],
+    orgImg = [],
+    citzImg = [],
+    panImg = [],
   } = organizationData;
+
   const columns = [
     {
       title: "Service Name",
@@ -119,13 +127,13 @@ const OrganizationDetailsPage = () => {
     },
     {
       title: "Service Code",
-      dataIndex: ["service", "servicecode"],
+      dataIndex: ["service", "serviceCode"],
       key: "serviceCode",
     },
     {
       title: "Provider",
-      dataIndex: "serviceprovidername",
-      key: "serviceprovidername",
+      dataIndex: "serviceProviderName",
+      key: "serviceProviderName",
     },
     {
       title: "Price",
@@ -178,7 +186,7 @@ const OrganizationDetailsPage = () => {
               color: "#333",
             }}
           >
-            {nameorg || "No Organization Name"}
+            {nameOrg || "No Organization Name"}
           </Title>
           <Button
             type="primary"
@@ -212,13 +220,18 @@ const OrganizationDetailsPage = () => {
                 <Text strong>Address:</Text> {address || "N/A"}
               </div>
               <div>
-                <Text strong>Contact Person:</Text> {contactperson || "N/A"}
+                <Text strong>Contact Person:</Text> {contactPerson || "N/A"}
               </div>
               <div>
-                <Text strong>Contact Phone:</Text> {contactphno || "N/A"}
+                <Text strong>Contact Phone:</Text> {contactNumber || "N/A"}
               </div>
+
               <div>
-                <Text strong>PAN Number:</Text> {panno || "N/A"}
+                <Text strong>Message:</Text> {message || "N/A"}
+              </div>
+
+              <div>
+                <Text strong>PAN Number:</Text> {panNo || "N/A"}
               </div>
               <div>
                 <Text strong>Status:</Text> {status || "N/A"}
@@ -229,11 +242,12 @@ const OrganizationDetailsPage = () => {
               <div>
                 <Text strong>Active:</Text> {isActive ? "Yes" : "No"}
               </div>
+
               <div>
-                <Text strong>Rating:</Text> {rating} / 5 (by {ratedby} users)
+                <Text strong>Rating:</Text> {rating} / 5 (by {ratedBy} users)
               </div>
               <div>
-                <Text strong>Total Rating:</Text> {totalrating}
+                <Text strong>Total Rating:</Text> {totalRating}
               </div>
               <div>
                 <Text strong>Created At:</Text>{" "}
@@ -265,32 +279,80 @@ const OrganizationDetailsPage = () => {
 
           <Col xs={24} md={12}>
             <Card title={<Title level={4}>Images</Title>} className="shadow-md">
-              {["orgimg", "citzimg", "panimg"].map((field, idx) => (
-                <div key={idx}>
-                  <Title level={5}>{field.toUpperCase()}</Title>
+              {/* Citizenship Image in its own row */}
+              <Row gutter={[16, 16]} style={{ marginBottom: "16px" }}>
+                <Col span={24}>
+                  <Title level={5}>Citizenship Image</Title>
                   <div
                     style={{
                       display: "flex",
-                      flexWrap: "wrap",
+                      flexDirection: "row",
                       gap: "16px",
-                      marginBottom: "16px",
                     }}
                   >
-                    {(organizationData[field] || []).map((image, index) => (
+                    {citzImg.map((image, index) => (
                       <Avatar
                         key={index}
                         src={image}
                         shape="square"
                         size={120}
-                        alt={`${field} ${index + 1}`}
+                        alt={`Citizenship Image ${index + 1}`}
                         style={{ cursor: "pointer" }}
                         onClick={() => handleImageClick(image)}
                       />
                     ))}
                   </div>
-                  <Divider />
-                </div>
-              ))}
+                </Col>
+              </Row>
+
+              {/* Organization Image and PAN Image in another row */}
+              <Row gutter={[16, 16]}>
+                <Col span={12}>
+                  <Title level={5}>Organization Image</Title>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: "16px",
+                    }}
+                  >
+                    {orgImg.map((image, index) => (
+                      <Avatar
+                        key={index}
+                        src={image}
+                        shape="square"
+                        size={120}
+                        alt={`Organization Image ${index + 1}`}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleImageClick(image)}
+                      />
+                    ))}
+                  </div>
+                </Col>
+
+                <Col span={12}>
+                  <Title level={5}>PAN Image</Title>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: "16px",
+                    }}
+                  >
+                    {panImg.map((image, index) => (
+                      <Avatar
+                        key={index}
+                        src={image}
+                        shape="square"
+                        size={120}
+                        alt={`PAN Image ${index + 1}`}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => handleImageClick(image)}
+                      />
+                    ))}
+                  </div>
+                </Col>
+              </Row>
             </Card>
           </Col>
         </Row>

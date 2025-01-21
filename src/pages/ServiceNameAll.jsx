@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import DashboardLayout from "../components/DashboardLayout";
 import ServiceNameTable from "../components/serviceeNameTable";
 import { Input, message, Spin, Alert, Button, Modal, Form, Switch } from "antd";
@@ -9,16 +9,22 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 const ServiceNameAll = () => {
   const [search, setSearch] = useState("");
   const [isActive, setIsActive] = useState(undefined);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
 
   const queryClient = useQueryClient();
 
+  // Fetch service name data with search, pagination, and filter
   const { data, isLoading, isError, error } = useServiceNameData({
     search,
     isActive,
+    page,
+    limit,
   });
 
+  // Mutation for adding a new service name
   const mutation = useMutation({
     mutationFn: addServiceName,
     onSuccess: () => {
@@ -32,6 +38,13 @@ const ServiceNameAll = () => {
     },
   });
 
+  // Handle page and limit changes
+  const handlePageChange = (newPage, newLimit) => {
+    setPage(newPage);
+    setLimit(newLimit);
+  };
+
+  // Modal form submission
   const handleOk = () => {
     form
       .validateFields()
@@ -42,25 +55,62 @@ const ServiceNameAll = () => {
         });
       })
       .catch((info) => {
-        console.log("Validate Failed:", info);
+        console.log("Validation Failed:", info);
       });
   };
 
-  if (isLoading) return <Spin tip="Loading..." />;
-  if (isError)
-    return <Alert message="Error" description={error.message} type="error" />;
+  // Handle active state filter
+  const toggleActiveFilter = (checked) => {
+    setIsActive(checked ? true : undefined); // Set `true` for active, or clear filter
+    setPage(1); // Reset to first page when filter changes
+  };
+
+  if (isLoading) {
+    return <Spin tip="Loading..." />;
+  }
+
+  if (isError) {
+    return (
+      <Alert
+        message="Error"
+        description={error.message || "Failed to fetch service names."}
+        type="error"
+        showIcon
+      />
+    );
+  }
 
   return (
     <DashboardLayout>
-      {/* <Button type="primary" onClick={() => setIsModalVisible(true)}>
-        Add Service Name
-      </Button> */}
+      <div style={{ marginBottom: 16 }}>
+        <Input
+          placeholder="Search Service Name"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{ width: 300, marginRight: 16 }}
+        />
+        <Switch
+          checked={isActive === true}
+          onChange={toggleActiveFilter}
+          style={{ marginRight: 16 }}
+          checkedChildren="Active"
+          unCheckedChildren="All"
+        />
+        <Button type="primary" onClick={() => setIsModalVisible(true)}>
+          Add Service Name
+        </Button>
+      </div>
 
-      <ServiceNameTable data={data || []} />
+      <ServiceNameTable
+        data={data.data}
+        onPageChange={handlePageChange}
+        page={page}
+        limit={limit}
+      />
 
       <Modal
         title="Add Service Name"
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleOk}
         onCancel={() => setIsModalVisible(false)}
         confirmLoading={mutation.isLoading}

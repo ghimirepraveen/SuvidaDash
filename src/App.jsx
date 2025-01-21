@@ -9,11 +9,13 @@ import ServiceDetails from "./pages/serviceDetail";
 import OrganizationDetailsPage from "./pages/organizationDetails";
 import NameService from "./pages/ServiceNameAll";
 import Dashboard from "./pages/dasboard";
+import PageNotFound from "./pages/NotFound";
 
 const App = () => {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
 
         <Route
@@ -82,6 +84,8 @@ const App = () => {
             </AuthenticatedRoutes>
           }
         />
+
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </Router>
   );

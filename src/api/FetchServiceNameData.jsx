@@ -31,11 +31,13 @@ const addServiceName = async (data) => {
     throw error;
   }
 };
-const updateServiceName = async (id, updatedData) => {
+const updateServiceName = async ({ id, updatedData }) => {
+  console.log("updateServiceName called with:", id, updatedData);
   const response = await axiosInstance.put(
     `/service/servicename/${id}`,
     updatedData
   );
+  console.log("updateServiceName response:", response.data);
   return response.data;
 };
 

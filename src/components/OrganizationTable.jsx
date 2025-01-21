@@ -1,14 +1,12 @@
-// src/components/OrganizationTable.js
 import React from "react";
 import { Table, Tag, Spin, Button } from "antd";
 import { EyeOutlined, EditOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
-const OrganizationTable = ({ data, isLoading, isError }) => {
+const OrganizationTable = ({ data }) => {
   const navigate = useNavigate();
-  if (isLoading) return <Spin tip="Loading..." />;
-  if (isError) return <div>Error loading data.</div>;
 
+  if (!data) return <Spin tip="Loading..." />;
   const columns = [
     { title: "Organization Name", dataIndex: "nameorg", key: "nameorg" },
     { title: "Status", dataIndex: "status", key: "status" },
@@ -19,8 +17,13 @@ const OrganizationTable = ({ data, isLoading, isError }) => {
     },
     {
       title: "Contact Phone",
-      dataIndex: "contactphno",
-      key: "contactphno",
+      dataIndex: "contactNumber",
+      key: "contactNumber",
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
     },
     {
       title: "Blocked Status",
@@ -38,7 +41,9 @@ const OrganizationTable = ({ data, isLoading, isError }) => {
       title: "Rating",
       dataIndex: "rating",
       key: "rating",
-      render: (rating) => <Tag color="blue">{rating}</Tag>,
+      render: (rating) => (
+        <Tag color={rating > 0 ? "blue" : "red"}>{rating || "Unrated"}</Tag>
+      ),
     },
     {
       title: "Actions",
@@ -61,31 +66,26 @@ const OrganizationTable = ({ data, isLoading, isError }) => {
   ];
 
   const handleView = (record) => {
-    navigate("/organization/" + record.key);
+    navigate(`/organization/${record.key}`);
   };
 
   const handleEdit = (record) => {
-    console.log(record);
-    navigate("/organization/edit/" + record.key);
+    navigate(`/organization/edit/${record.key}`);
   };
 
   const mappedDataSource = data?.data?.docs?.map((org) => ({
     key: org._id,
-    nameorg: org.nameorg,
+    nameorg: org.nameOrg,
     status: org.status,
-    contactperson: org.contactperson,
-    contactphno: org.contactphno,
+    contactperson: org.contactPerson,
+    contactNumber: org.contactNumber,
+    address: org.address || `${org.coordinates[1]}, ${org.coordinates[0]}`,
     isBlocked: org.isBlocked,
+    isActive: org.isActive,
     rating: org.rating,
   }));
 
-  return (
-    <Table
-      style={{ fontSize: "25px" }}
-      columns={columns}
-      dataSource={mappedDataSource}
-    />
-  );
+  return <Table columns={columns} dataSource={mappedDataSource} />;
 };
 
 export default OrganizationTable;

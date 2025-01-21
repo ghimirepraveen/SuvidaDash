@@ -3,54 +3,42 @@ import {
   Table,
   Button,
   Switch,
-  Spin,
   message,
   Modal,
   Form,
   Input,
   Descriptions,
+  Spin,
 } from "antd";
-import {
-  EditOutlined,
-  EyeOutlined,
-  SearchOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { EditOutlined, EyeOutlined } from "@ant-design/icons";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   updateServiceName,
   getServiceNameDetails,
-  addServiceName,
 } from "../api/FetchServiceNameData";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const ServiceeNameTable1 = ({ data, isLoading, isError, onPageChange }) => {
-  const navigate = useNavigate();
+const ServiceNameTable = ({ data, onPageChange, page, limit }) => {
   const queryClient = useQueryClient();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isViewModalVisible, setIsViewModalVisible] = useState(false);
+  const [form] = Form.useForm();
   const [selectedService, setSelectedService] = useState(null);
   const [viewService, setViewService] = useState(null);
-  const [form] = Form.useForm();
   const [isUpdating, setIsUpdating] = useState(false);
-  const [searchText, setSearchText] = useState("");
 
   const mutation = useMutation({
-    mutationFn: addServiceName,
+    mutationFn: updateServiceName,
     onSuccess: () => {
-      message.success("Service name added successfully!");
+      message.success("Service updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["serviceData"] });
       setIsModalVisible(false);
-      form.resetFields();
+      setIsUpdating(false);
     },
     onError: () => {
-      message.error("Failed to add service name.");
+      message.error("Failed to update service.");
+      setIsUpdating(false);
     },
   });
-
-  if (isLoading) return <Spin tip="Loading..." />;
-  if (isError) return <div>Error loading data.</div>;
-  if (!data?.data?.docs?.length) return <div>No services available.</div>;
 
   const showEditModal = (record) => {
     setSelectedService(record);
@@ -71,18 +59,16 @@ const ServiceeNameTable1 = ({ data, isLoading, isError, onPageChange }) => {
     }
   };
 
-  const handleEditSubmit = async () => {
-    try {
-      const values = await form.validateFields();
-      setIsUpdating(true);
-      await updateServiceName(selectedService.key, values);
-      message.success("Service updated successfully!");
-      setIsModalVisible(false);
-      setIsUpdating(false);
-    } catch (error) {
-      message.error("Failed to update service.");
-      setIsUpdating(false);
-    }
+  const handleEditSubmit = () => {
+    form
+      .validateFields()
+      .then((values) => {
+        setIsUpdating(true);
+        mutation.mutate({ id: selectedService._id, updatedData: values });
+      })
+      .catch((error) => {
+        console.error("Validation Failed:", error);
+      });
   };
 
   const handleCancel = () => {
@@ -91,25 +77,13 @@ const ServiceeNameTable1 = ({ data, isLoading, isError, onPageChange }) => {
     form.resetFields();
   };
 
-  const handleSearch = (e) => {
-    setSearchText(e.target.value.toLowerCase());
-  };
-
-  const filteredData = data?.data?.docs.filter((doc) =>
-    doc.name.toLowerCase().includes(searchText)
-  );
+  if (!data || !data.docs || !data.pagination) {
+    return <p>No data available</p>;
+  }
 
   const columns = [
-    {
-      title: "Service Name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Service Code",
-      dataIndex: "servicecode",
-      key: "servicecode",
-    },
+    { title: "Service Name", dataIndex: "name", key: "name" },
+    { title: "Service Code", dataIndex: "servicecode", key: "servicecode" },
     {
       title: "Active Status",
       dataIndex: "isActive",
@@ -123,61 +97,32 @@ const ServiceeNameTable1 = ({ data, isLoading, isError, onPageChange }) => {
         <>
           <Button
             icon={<EyeOutlined />}
-            onClick={() => showViewModal(record.key)}
+            onClick={() => showViewModal(record._id)}
             style={{ marginRight: 8 }}
-          ></Button>
+          />
           <Button
             icon={<EditOutlined />}
             onClick={() => showEditModal(record)}
             type="primary"
-          ></Button>
+          />
         </>
       ),
     },
   ];
 
-  const mappedDataSource = filteredData.map((doc, index) => ({
-    key: doc._id || index,
-    name: doc.name,
-    servicecode: doc.servicecode,
-    isActive: doc.isActive,
-  }));
+  const { total, page: currentPage, limit: pageSize } = data.pagination;
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: 16,
-        }}
-      >
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => setIsModalVisible(true)}
-        >
-          Add Service Name
-        </Button>
-        <Input
-          placeholder="Search Service Name"
-          prefix={<SearchOutlined />}
-          value={searchText}
-          onChange={handleSearch}
-          style={{ width: 300 }}
-        />
-      </div>
-
       <Table
         columns={columns}
-        dataSource={mappedDataSource}
+        dataSource={data.docs}
+        rowKey="_id"
         pagination={{
-          current: data?.data?.page,
-          pageSize: data?.data?.limit,
-          total: data?.data?.totalDocs,
-          onChange: (page, pageSize) => {
-            onPageChange(page, pageSize);
-          },
+          current: currentPage,
+          pageSize,
+          total,
+          onChange: onPageChange,
         }}
       />
 
@@ -187,7 +132,6 @@ const ServiceeNameTable1 = ({ data, isLoading, isError, onPageChange }) => {
         onOk={handleEditSubmit}
         onCancel={handleCancel}
         confirmLoading={isUpdating}
-        className="rounded-lg shadow-xl p-4"
       >
         <Form form={form} layout="vertical">
           <Form.Item
@@ -210,42 +154,25 @@ const ServiceeNameTable1 = ({ data, isLoading, isError, onPageChange }) => {
         visible={isViewModalVisible}
         footer={null}
         onCancel={handleCancel}
-        className="rounded-lg shadow-xl p-6"
       >
         {viewService ? (
-          <div className="space-y-4">
-            <Descriptions bordered column={1} className="space-y-4">
-              <Descriptions.Item label="Service Name">
-                <span className="text-lg font-semibold">
-                  {viewService.name}
-                </span>
-              </Descriptions.Item>
-              <Descriptions.Item label="Service Code">
-                <span className="text-sm text-gray-500">
-                  {viewService.servicecode}
-                </span>
-              </Descriptions.Item>
-              <Descriptions.Item label="Status">
-                <span
-                  className={`${
-                    viewService.isActive ? "text-green-500" : "text-red-500"
-                  } font-medium`}
-                >
-                  {viewService.isActive ? "Active" : "Inactive"}
-                </span>
-              </Descriptions.Item>
-              <Descriptions.Item label="Created At">
-                <span className="text-sm">
-                  {new Date(viewService.createdAt).toLocaleString()}
-                </span>
-              </Descriptions.Item>
-              <Descriptions.Item label="Updated At">
-                <span className="text-sm">
-                  {new Date(viewService.updatedAt).toLocaleString()}
-                </span>
-              </Descriptions.Item>
-            </Descriptions>
-          </div>
+          <Descriptions bordered column={1}>
+            <Descriptions.Item label="Service Name">
+              {viewService.name}
+            </Descriptions.Item>
+            <Descriptions.Item label="Service Code">
+              {viewService.servicecode}
+            </Descriptions.Item>
+            <Descriptions.Item label="Status">
+              {viewService.isActive ? "Active" : "Inactive"}
+            </Descriptions.Item>
+            <Descriptions.Item label="Created At">
+              {new Date(viewService.createdAt).toLocaleString()}
+            </Descriptions.Item>
+            <Descriptions.Item label="Updated At">
+              {new Date(viewService.updatedAt).toLocaleString()}
+            </Descriptions.Item>
+          </Descriptions>
         ) : (
           <Spin tip="Loading details..." />
         )}
@@ -254,4 +181,4 @@ const ServiceeNameTable1 = ({ data, isLoading, isError, onPageChange }) => {
   );
 };
 
-export default ServiceeNameTable1;
+export default ServiceNameTable;
