@@ -68,7 +68,7 @@ const BookingTable = ({
       key: doc._id,
       organizationName: doc.org?.nameOrg || "N/A",
       serviceName: doc.servicename?.name || "N/A",
-      serviceCode: doc.service?._id || "N/A",
+      serviceCode: doc.service?.serviceCode || "N/A",
       status: doc.bookingstatus || "N/A",
       serviceProviderName: doc.service?.serviceprovidername || "N/A",
       serviceProviderEmail: doc.service?.serviceprovideremail || "N/A",
