@@ -50,8 +50,6 @@ const Login = () => {
           layout="vertical"
           initialValues={{
             remember: true,
-            email: "admin@gmail.com",
-            password: "dev@getnada.com",
           }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
