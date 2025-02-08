@@ -12,7 +12,6 @@ import {
   Row,
   Col,
   Space,
-  message,
   Modal,
   Input,
 } from "antd";
@@ -97,7 +96,7 @@ const ServiceDetailsPage = () => {
     price,
     isActive,
     isBlocked,
-    messgae,
+    message,
     status,
     img,
     rating,
@@ -182,13 +181,13 @@ const ServiceDetailsPage = () => {
                 <Text strong style={{ fontSize: "18px" }}>
                   Message:
                 </Text>{" "}
-                {messgae || "N/A"}
+                {message || "N/A"}
               </div>
               <div>
                 <Text strong style={{ fontSize: "18px" }}>
                   Organization:
                 </Text>{" "}
-                {org?.nameorg || "N/A"}
+                {org?.nameOrg || "N/A"}
               </div>
               <div>
                 <Text strong style={{ fontSize: "18px" }}>
@@ -200,7 +199,7 @@ const ServiceDetailsPage = () => {
                 <Text strong style={{ fontSize: "18px" }}>
                   Price:
                 </Text>{" "}
-                ${price || "N/A"}
+                Rs.{price || "N/A"}
               </div>
               <div>
                 <Text strong style={{ fontSize: "18px" }}>
@@ -239,7 +238,7 @@ const ServiceDetailsPage = () => {
                 {img?.map((image, index) => (
                   <Avatar
                     key={index}
-                    src={`/${image}`}
+                    src={image}
                     shape="square"
                     size={120}
                     alt={`Service Image ${index + 1}`}
@@ -295,20 +294,24 @@ const ServiceDetailsPage = () => {
           <Col xs={24} md={12}>
             <Card className="shadow-md mb-4" style={{ textAlign: "center" }}>
               <Space size="large">
-                <Button
-                  type="primary"
-                  onClick={() => handleStatusChange("accepted")}
-                >
-                  Approve
-                </Button>
+                {status !== "Approved" && (
+                  <Button
+                    type="primary"
+                    onClick={() => handleStatusChange("approved")}
+                  >
+                    Approve
+                  </Button>
+                )}
 
-                <Button
-                  type="primary"
-                  danger
-                  onClick={() => handleStatusChange("rejected")}
-                >
-                  Reject
-                </Button>
+                {status !== "Rejected" && (
+                  <Button
+                    type="primary"
+                    danger
+                    onClick={() => handleStatusChange("rejected")}
+                  >
+                    Reject
+                  </Button>
+                )}
               </Space>
             </Card>
           </Col>
@@ -320,11 +323,7 @@ const ServiceDetailsPage = () => {
           onCancel={handleModalClose}
           centered
         >
-          <img
-            src={`/${selectedImage}`}
-            alt="Selected"
-            style={{ width: "100%" }}
-          />
+          <img src={selectedImage} alt="Selected" style={{ width: "100%" }} />
         </Modal>
 
         <Modal

@@ -3,10 +3,17 @@ import { Table, Tag, Spin, Button } from "antd";
 import { EyeOutlined, EditOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
-const OrganizationTable = ({ data }) => {
+const OrganizationTable = ({
+  data,
+  isLoading,
+  isError,
+  onPageChange,
+  pagination,
+}) => {
   const navigate = useNavigate();
+  if (isLoading) return <Spin tip="Loading..." />;
+  if (isError) return <p>Error loading data.</p>;
 
-  if (!data) return <Spin tip="Loading..." />;
   const columns = [
     { title: "Organization Name", dataIndex: "nameorg", key: "nameorg" },
     { title: "Status", dataIndex: "status", key: "status" },
@@ -55,11 +62,6 @@ const OrganizationTable = ({ data }) => {
             onClick={() => handleView(record)}
             icon={<EyeOutlined />}
           />
-          <Button
-            type="link"
-            onClick={() => handleEdit(record)}
-            icon={<EditOutlined />}
-          />
         </>
       ),
     },
@@ -69,23 +71,30 @@ const OrganizationTable = ({ data }) => {
     navigate(`/organization/${record.key}`);
   };
 
-  const handleEdit = (record) => {
-    navigate(`/organization/edit/${record.key}`);
-  };
-
   const mappedDataSource = data?.data?.docs?.map((org) => ({
     key: org._id,
     nameorg: org.nameOrg,
     status: org.status,
     contactperson: org.contactPerson,
     contactNumber: org.contactNumber,
-    address: org.address || `${org.coordinates[1]}, ${org.coordinates[0]}`,
+    address:
+      org.address ||
+      `${org.longLat.coordinates[1]}, ${org.longLat.coordinates[0]}`,
     isBlocked: org.isBlocked,
     isActive: org.isActive,
     rating: org.rating,
   }));
 
-  return <Table columns={columns} dataSource={mappedDataSource} />;
+  return (
+    <Table
+      columns={columns}
+      dataSource={mappedDataSource}
+      pagination={{
+        ...pagination,
+        onChange: onPageChange,
+      }}
+    />
+  );
 };
 
 export default OrganizationTable;

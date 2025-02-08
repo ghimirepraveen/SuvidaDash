@@ -16,7 +16,6 @@ const ServiceNameAll = () => {
 
   const queryClient = useQueryClient();
 
-  // Fetch service name data with search, pagination, and filter
   const { data, isLoading, isError, error } = useServiceNameData({
     search,
     isActive,
@@ -24,7 +23,6 @@ const ServiceNameAll = () => {
     limit,
   });
 
-  // Mutation for adding a new service name
   const mutation = useMutation({
     mutationFn: addServiceName,
     onSuccess: () => {
@@ -38,13 +36,11 @@ const ServiceNameAll = () => {
     },
   });
 
-  // Handle page and limit changes
   const handlePageChange = (newPage, newLimit) => {
     setPage(newPage);
     setLimit(newLimit);
   };
 
-  // Modal form submission
   const handleOk = () => {
     form
       .validateFields()
@@ -59,10 +55,9 @@ const ServiceNameAll = () => {
       });
   };
 
-  // Handle active state filter
   const toggleActiveFilter = (checked) => {
-    setIsActive(checked ? true : undefined); // Set `true` for active, or clear filter
-    setPage(1); // Reset to first page when filter changes
+    setIsActive(checked ? true : undefined);
+    setPage(1);
   };
 
   if (isLoading) {

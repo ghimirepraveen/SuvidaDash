@@ -8,7 +8,7 @@ const useServiceNameData = (query) => {
     onError: (error) => {
       console.error("Error fetching service name data:", error);
     },
-    keepPreviousData: true, // Keeps old data during refetch
+    keepPreviousData: true,
   });
 };
 

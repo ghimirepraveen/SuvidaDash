@@ -9,6 +9,10 @@ import ServiceDetails from "./pages/serviceDetail";
 import OrganizationDetailsPage from "./pages/organizationDetails";
 import NameService from "./pages/ServiceNameAll";
 import Dashboard from "./pages/dasboard";
+import Booking from "./pages/bookingAll";
+import BookingDetails from "./pages/bookingDetails";
+import Order from "./pages/orderAll";
+import OrderDetails from "./pages/orderDetails";
 import PageNotFound from "./pages/NotFound";
 
 const App = () => {
@@ -85,6 +89,38 @@ const App = () => {
           }
         />
 
+        <Route
+          path="/booking"
+          element={
+            <AuthenticatedRoutes>
+              <Booking />
+            </AuthenticatedRoutes>
+          }
+        />
+        <Route
+          path="/booking/:id"
+          element={
+            <AuthenticatedRoutes>
+              <BookingDetails />
+            </AuthenticatedRoutes>
+          }
+        />
+        <Route
+          path="/order"
+          element={
+            <AuthenticatedRoutes>
+              <Order />
+            </AuthenticatedRoutes>
+          }
+        />
+        <Route
+          path="/order/:id"
+          element={
+            <AuthenticatedRoutes>
+              <OrderDetails />
+            </AuthenticatedRoutes>
+          }
+        />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </Router>

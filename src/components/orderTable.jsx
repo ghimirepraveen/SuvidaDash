@@ -1,16 +1,9 @@
 import React from "react";
-import { Table, Tag, Spin, Button } from "antd";
-import { EyeOutlined, EditOutlined } from "@ant-design/icons";
+import { Table, Spin, Button } from "antd";
+import { EyeOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import PropTypes from "prop-types";
 
-const ServiceTable = ({
-  data,
-  isLoading,
-  isError,
-  onPageChange,
-  pagination,
-}) => {
+const OrderTable = ({ data, isLoading, isError, onPageChange, pagination }) => {
   const navigate = useNavigate();
 
   if (isLoading) return <Spin tip="Loading..." />;
@@ -47,49 +40,32 @@ const ServiceTable = ({
       render: (price) => `Rs.${price}`,
     },
     {
-      title: "Active Status",
-      dataIndex: "isActive",
-      key: "isActive",
-      render: (isActive) => (isActive ? "Active" : "Inactive"),
-    },
-    {
-      title: "Rating",
-      dataIndex: "rating",
-      key: "rating",
-      render: (rating) => <Tag color="blue">{rating}</Tag>,
-    },
-    {
       title: "Actions",
       key: "actions",
       render: (_, record) => (
-        <>
-          <Button
-            type="link"
-            onClick={() => handleView(record)}
-            icon={<EyeOutlined />}
-          />
-        </>
+        <Button
+          type="link"
+          onClick={() => handleView(record)}
+          icon={<EyeOutlined />}
+        />
       ),
     },
   ];
 
   const handleView = (record) => {
-    navigate("/service/" + record.key);
+    navigate(`/order/${record.key}`);
   };
 
   const mappedDataSource = data?.data?.docs.map((doc) => ({
     key: doc._id,
-    organizationName: doc.org.nameOrg,
-    organizationId: doc._id,
-    serviceName: doc.serviceName?.name || "N/A",
-    serviceCode: doc.serviceName?.servicecode || "N/A",
-    status: doc.status,
-    serviceProviderName: doc.serviceprovidername,
-    serviceProviderEmail: doc.serviceprovideremail,
-    serviceProviderPhone: doc.serviceproviderphone,
-    price: doc.price,
-    isActive: doc.isActive,
-    rating: doc.rating,
+    organizationName: doc.org?.nameOrg || "N/A",
+    serviceName: doc.servicenames?.name || "N/A",
+    serviceCode: doc.servicenames?.servicecode || "N/A",
+    status: doc.status || "N/A",
+    serviceProviderName: doc.service?.serviceprovidername || "N/A",
+    serviceProviderEmail: doc.service?.serviceprovideremail || "N/A",
+    serviceProviderPhone: doc.service?.serviceproviderphone || "N/A",
+    price: doc.price || 0,
   }));
 
   return (
@@ -103,12 +79,5 @@ const ServiceTable = ({
     />
   );
 };
-ServiceTable.propTypes = {
-  data: PropTypes.object.isRequired,
-  isLoading: PropTypes.bool.isRequired,
-  isError: PropTypes.bool.isRequired,
-  onPageChange: PropTypes.func.isRequired,
-  pagination: PropTypes.object.isRequired,
-};
 
-export default ServiceTable;
+export default OrderTable;

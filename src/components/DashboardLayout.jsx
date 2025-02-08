@@ -67,14 +67,22 @@ const DashboardLayout = ({ children }) => {
             </Menu.Item>
           </SubMenu>
 
-          <Menu.Item key="2" icon={<ProductOutlined />}>
+          <Menu.Item key="servicename" icon={<ProductOutlined />}>
             <Link to="/servicename">ServiceName</Link>
           </Menu.Item>
 
-          <Menu.Item key="3" icon={<SettingOutlined />}>
+          <Menu.Item key="order" icon={<ProductOutlined />}>
+            <Link to="/order">Order</Link>
+          </Menu.Item>
+
+          <Menu.Item key="booking" icon={<ProductOutlined />}>
+            <Link to="/booking">Booking</Link>
+          </Menu.Item>
+
+          <Menu.Item key="settings" icon={<SettingOutlined />}>
             <Link to="/settings">Settings</Link>
           </Menu.Item>
-          <Menu.Item key="4" icon={<LogoutOutlined />} onClick={handleLogout}>
+          <Menu.Item key="5" icon={<LogoutOutlined />} onClick={handleLogout}>
             Logout
           </Menu.Item>
         </Menu>

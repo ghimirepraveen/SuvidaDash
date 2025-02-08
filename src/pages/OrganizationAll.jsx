@@ -1,25 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DashboardLayout from "../components/DashboardLayout";
 import OrganizationTable from "../components/OrganizationTable";
-import { Input, Select, message, Pagination } from "antd";
+import { Input, Select, message } from "antd";
 import { useOrgData } from "../hooks/useOrgData";
 
 const OrganizationAll = ({ dataSource }) => {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState(undefined);
   const [isBlocked, setIsBlocked] = useState(undefined);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [total, setTotal] = useState(0);
 
   const [query, setQuery] = useState({
     page: 1,
     limit: 10,
-    sort: "",
-    dir: "",
     search: "",
     status: "",
     isBlocked: "",
   });
 
   const { data, isError, error } = useOrgData(query, dataSource);
+
+  useEffect(() => {
+    if (data?.data?.pagination?.total) {
+      setTotal(data.data.pagination.total);
+    }
+  }, [data]);
 
   const handleStatusChange = (value) => {
     setStatus(value);
@@ -45,7 +52,7 @@ const OrganizationAll = ({ dataSource }) => {
 
   const handleSearch = () => {
     if (search.trim() === "") {
-      message.error("Search text is not allowed to be empty");
+      message.error("Search text cannot be empty");
       return;
     }
     setQuery((prevQuery) => ({
@@ -55,7 +62,9 @@ const OrganizationAll = ({ dataSource }) => {
     }));
   };
 
-  const handlePaginationChange = (page, pageSize) => {
+  const handlePageChange = (page, pageSize) => {
+    setPage(page);
+    setLimit(pageSize);
     setQuery((prevQuery) => ({
       ...prevQuery,
       page,
@@ -95,8 +104,8 @@ const OrganizationAll = ({ dataSource }) => {
             value={isBlocked}
             allowClear
           >
-            <Select.Option value="true">True</Select.Option>
-            <Select.Option value="false">False</Select.Option>
+            <Select.Option value="true">Blocked</Select.Option>
+            <Select.Option value="false">Active</Select.Option>
           </Select>
           <Input.Search
             placeholder="Search here"
@@ -107,18 +116,16 @@ const OrganizationAll = ({ dataSource }) => {
           />
         </div>
       </div>
-      <OrganizationTable data={data} />
-      {data?.data && (
-        <Pagination
-          current={query.page}
-          pageSize={query.limit}
-          total={data.data.totalDocs}
-          onChange={handlePaginationChange}
-          showSizeChanger
-          pageSizeOptions={["10", "20", "50"]}
-        />
-      )}
-      {isError && <p>Error loading data: {error.message}</p>}
+
+      <OrganizationTable
+        data={data}
+        isLoading={!data}
+        isError={isError}
+        onPageChange={handlePageChange}
+        pagination={{ current: page, pageSize: limit, total }}
+      />
+
+      {isError && <p>Error loading data: {error?.message}</p>}
     </DashboardLayout>
   );
 };

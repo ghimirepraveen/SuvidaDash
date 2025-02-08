@@ -14,7 +14,7 @@ const Login = () => {
       { email: values.email, password: values.password },
       {
         onSuccess: () => {
-          navigate("/organization/requested");
+          navigate("/dashboard");
         },
       }
     );

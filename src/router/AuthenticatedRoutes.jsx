@@ -16,10 +16,6 @@ const AuthenticatedRoutes = ({ children }) => {
   const accessToken = getAccessToken();
   const refreshToken = getRefreshToken();
 
-  console.log("user from top", user);
-  console.log("accessToken", accessToken);
-  console.log("refreshToken", refreshToken);
-
   if (user?.data?.role !== "Admin") {
     return <NotAuthorized />;
   }

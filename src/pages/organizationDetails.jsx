@@ -122,17 +122,17 @@ const OrganizationDetailsPage = () => {
   const columns = [
     {
       title: "Service Name",
-      dataIndex: ["service", "name"],
+      dataIndex: ["serviceName", "name"],
       key: "serviceName",
     },
     {
       title: "Service Code",
-      dataIndex: ["service", "serviceCode"],
+      dataIndex: ["serviceName", "servicecode"],
       key: "serviceCode",
     },
     {
       title: "Provider",
-      dataIndex: "serviceProviderName",
+      dataIndex: "serviceprovidername",
       key: "serviceProviderName",
     },
     {
@@ -255,7 +255,7 @@ const OrganizationDetailsPage = () => {
               </div>
               <Divider />
               <Row justify="end">
-                {status !== "approved" && (
+                {status !== "Approved" && (
                   <Button
                     type="primary"
                     style={{ marginRight: 8 }}

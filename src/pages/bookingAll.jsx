@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "../components/DashboardLayout";
-import ServiceTable from "../components/ServiceTable";
+import BookingTable from "../components/bookingTable";
 import { Input, Select, message } from "antd";
-import { useServiceData } from "../hooks/useServiceData";
+import { useBookingData } from "../hooks/useBookingData";
 
-const ServiceAll = ({ dataSource }) => {
+const BookingAll = () => {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState(undefined);
   const [isBlocked, setIsBlocked] = useState(undefined);
@@ -15,14 +15,12 @@ const ServiceAll = ({ dataSource }) => {
   const [query, setQuery] = useState({
     page: 1,
     limit: 10,
-    sort: "",
-    dir: "",
     search: "",
     status: "",
     isBlocked: "",
   });
 
-  const { data, isError, error } = useServiceData(query, dataSource);
+  const { data, isError, error } = useBookingData(query);
 
   useEffect(() => {
     if (data?.data?.pagination?.total) {
@@ -84,21 +82,20 @@ const ServiceAll = ({ dataSource }) => {
         }}
       >
         <div style={{ display: "flex", gap: "8px", marginLeft: "auto" }}>
-          {dataSource !== "requested" && (
-            <Select
-              placeholder="Filter by Status"
-              style={{ width: 200 }}
-              onChange={handleStatusChange}
-              value={status}
-              allowClear
-            >
-              <Select.Option value="Requested">Requested</Select.Option>
-              <Select.Option value="Pending">Pending</Select.Option>
-              <Select.Option value="Approved">Approved</Select.Option>
-              <Select.Option value="Rejected">Rejected</Select.Option>
-              <Select.Option value="Not Requested">Not Requested</Select.Option>
-            </Select>
-          )}
+          <Select
+            placeholder="Filter by Status"
+            style={{ width: 200 }}
+            onChange={handleStatusChange}
+            value={status}
+            allowClear
+          >
+            <Select.Option value="Requested">Requested</Select.Option>
+            <Select.Option value="Pending">Pending</Select.Option>
+            <Select.Option value="Approved">Approved</Select.Option>
+            <Select.Option value="Rejected">Rejected</Select.Option>
+            <Select.Option value="Not Requested">Not Requested</Select.Option>
+          </Select>
+
           <Select
             placeholder="Filter by Block Status"
             style={{ width: 200 }}
@@ -118,20 +115,16 @@ const ServiceAll = ({ dataSource }) => {
           />
         </div>
       </div>
-      <ServiceTable
+      <BookingTable
         data={data}
         isLoading={!data}
         isError={isError}
         onPageChange={handlePageChange}
-        pagination={{
-          current: page,
-          pageSize: limit,
-          total,
-        }}
+        pagination={{ current: page, pageSize: limit, total }}
       />
       {isError && <p>Error loading data: {error?.message}</p>}
     </DashboardLayout>
   );
 };
 
-export default ServiceAll;
+export default BookingAll;

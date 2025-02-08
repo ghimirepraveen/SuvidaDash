@@ -21,16 +21,15 @@ export const useOrgData = (query, dataSource) => {
     },
   });
 };
-// Inside useServiceListing
+
 export const useServiceListing = (query, organizationId) => {
-  console.log("useServiceListing called with:", query, organizationId); // Add this log
   return useQuery({
     queryKey: ["serviceData", organizationId, query],
     queryFn: () => fetchServiceData(query, organizationId),
     onError: (error) => {
       console.error("Error fetching service data:", error);
     },
-    enabled: !!organizationId, // Only run if organizationId is defined
+    enabled: !!organizationId,
   });
 };
 

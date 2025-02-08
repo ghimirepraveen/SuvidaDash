@@ -35,6 +35,7 @@ const DashboardContent = () => {
     { title: "All Orders", value: data.data?.orderAll },
     { title: "Accepted Orders", value: data.data?.orderAccepted },
     { title: "Declined Orders", value: data.data?.orderDeclined },
+    { title: "Completed Orders", value: data.data?.orderCompleted },
   ];
 
   return (
