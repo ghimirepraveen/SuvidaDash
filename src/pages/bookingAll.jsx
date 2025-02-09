@@ -7,7 +7,7 @@ import { useBookingData } from "../hooks/useBookingData";
 const BookingAll = () => {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState(undefined);
-  const [isBlocked, setIsBlocked] = useState(undefined);
+  //   const [isBlocked, setIsBlocked] = useState(undefined);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [total, setTotal] = useState(0);
@@ -37,14 +37,14 @@ const BookingAll = () => {
     }));
   };
 
-  const handleIsBlockedChange = (value) => {
-    setIsBlocked(value);
-    setQuery((prevQuery) => ({
-      ...prevQuery,
-      isBlocked: value,
-      page: 1,
-    }));
-  };
+  //   const handleIsBlockedChange = (value) => {
+  //     setIsBlocked(value);
+  //     setQuery((prevQuery) => ({
+  //       ...prevQuery,
+  //       isBlocked: value,
+  //       page: 1,
+  //     }));
+  //   };
 
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
@@ -96,7 +96,7 @@ const BookingAll = () => {
             <Select.Option value="Not Requested">Not Requested</Select.Option>
           </Select>
 
-          <Select
+          {/* <Select
             placeholder="Filter by Block Status"
             style={{ width: 200 }}
             onChange={handleIsBlockedChange}
@@ -105,7 +105,7 @@ const BookingAll = () => {
           >
             <Select.Option value="true">True</Select.Option>
             <Select.Option value="false">False</Select.Option>
-          </Select>
+          </Select> */}
           <Input.Search
             placeholder="Search here"
             style={{ width: 200 }}

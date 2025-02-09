@@ -23,7 +23,7 @@ const BookingTable = ({
       key: "organizationName",
     },
     { title: "Service Name", dataIndex: "serviceName", key: "serviceName" },
-    { title: "Service Code", dataIndex: "serviceCode", key: "serviceCode" },
+    // { title: "Service Code", dataIndex: "serviceCode", key: "serviceCode" },
     { title: "Status", dataIndex: "status", key: "status" },
     {
       title: "Service Provider",
@@ -68,7 +68,7 @@ const BookingTable = ({
       key: doc._id,
       organizationName: doc.org?.nameOrg || "N/A",
       serviceName: doc.servicename?.name || "N/A",
-      serviceCode: doc.service?.serviceCode || "N/A",
+      // serviceCode: doc.service?.serviceCode || "N/A",
       status: doc.bookingstatus || "N/A",
       serviceProviderName: doc.service?.serviceprovidername || "N/A",
       serviceProviderEmail: doc.service?.serviceprovideremail || "N/A",

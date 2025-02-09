@@ -99,7 +99,7 @@ const ServiceAll = ({ dataSource }) => {
               <Select.Option value="Not Requested">Not Requested</Select.Option>
             </Select>
           )}
-          <Select
+          {/* <Select
             placeholder="Filter by Block Status"
             style={{ width: 200 }}
             onChange={handleIsBlockedChange}
@@ -108,7 +108,7 @@ const ServiceAll = ({ dataSource }) => {
           >
             <Select.Option value="true">True</Select.Option>
             <Select.Option value="false">False</Select.Option>
-          </Select>
+          </Select> */}
           <Input.Search
             placeholder="Search here"
             style={{ width: 200 }}
