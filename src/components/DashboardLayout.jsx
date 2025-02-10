@@ -79,9 +79,9 @@ const DashboardLayout = ({ children }) => {
             <Link to="/booking">Booking</Link>
           </Menu.Item>
 
-          <Menu.Item key="settings" icon={<SettingOutlined />}>
+          {/* <Menu.Item key="settings" icon={<SettingOutlined />}>
             <Link to="/settings">Settings</Link>
-          </Menu.Item>
+          </Menu.Item> */}
           <Menu.Item key="5" icon={<LogoutOutlined />} onClick={handleLogout}>
             Logout
           </Menu.Item>

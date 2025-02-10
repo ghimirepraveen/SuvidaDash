@@ -88,7 +88,7 @@ const ServiceDetailsPage = () => {
 
   const {
     org,
-    service,
+    serviceName,
     serviceprovidername,
     serviceprovideremail,
     serviceproviderphone,
@@ -103,6 +103,8 @@ const ServiceDetailsPage = () => {
     totalratedby,
     createdAt,
   } = serviceDetails.data || {};
+
+  console.log(serviceName);
 
   return (
     <DashboardLayout>
@@ -124,7 +126,7 @@ const ServiceDetailsPage = () => {
               color: "#333",
             }}
           >
-            {service?.name}
+            {serviceName?.name}
           </Title>
           {isBlocked ? (
             <Button
@@ -193,7 +195,7 @@ const ServiceDetailsPage = () => {
                 <Text strong style={{ fontSize: "18px" }}>
                   Service Code:
                 </Text>{" "}
-                {service?.servicecode || "N/A"}
+                {serviceName?.servicecode || "N/A"}
               </div>
               <div>
                 <Text strong style={{ fontSize: "18px" }}>

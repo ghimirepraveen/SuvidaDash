@@ -24,7 +24,7 @@ const DashboardContent = () => {
     { title: "Users", value: data?.data?.user },
     { title: "Organizations", value: data?.data?.org },
     { title: "Admins", value: data?.data?.admin },
-    { title: "Services", value: data.data?.service },
+    { title: "User Blocked", value: data.data?.service },
     { title: "All Organizations", value: data.data?.orgAll },
     { title: "Approved Organizations", value: data.data?.orgApproved },
     { title: "All Services", value: data.data?.serviceAll },

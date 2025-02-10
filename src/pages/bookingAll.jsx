@@ -89,11 +89,11 @@ const BookingAll = () => {
             value={status}
             allowClear
           >
-            <Select.Option value="Requested">Requested</Select.Option>
-            <Select.Option value="Pending">Pending</Select.Option>
-            <Select.Option value="Approved">Approved</Select.Option>
-            <Select.Option value="Rejected">Rejected</Select.Option>
-            <Select.Option value="Not Requested">Not Requested</Select.Option>
+            <Select.Option value="Pending">Requested</Select.Option>
+            <Select.Option value="Accepted">Pending</Select.Option>
+            <Select.Option value="Rejected">Approved</Select.Option>
+            <Select.Option value="Completed">Rejected</Select.Option>
+            <Select.Option value="Cancelled">Not Requested</Select.Option>
           </Select>
 
           {/* <Select

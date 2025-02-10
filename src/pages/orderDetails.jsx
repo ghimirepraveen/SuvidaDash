@@ -49,10 +49,10 @@ const OrderDetails = () => {
       <Card>
         <Row gutter={16}>
           <Col span={16}>
-            <Title level={4}>{order.user.name || "N/A"}</Title>
-            <Text>Email: {order.user.email || "N/A"}</Text>
+            <Title level={4}>{order?.user?.name || "N/A"}</Title>
+            <Text>Email: {order?.user?.email || "N/A"}</Text>
             <br />
-            <Text>Phone: {order.user.phoneNumber || "N/A"}</Text>
+            <Text>Phone: {order?.user?.phoneNumber || "N/A"}</Text>
           </Col>
         </Row>
         <Divider />
@@ -60,24 +60,24 @@ const OrderDetails = () => {
           <Col span={12}>
             <Title level={5}>Service Details</Title>
             <Text>
-              Service Provider: {order.service.serviceprovidername || "N/A"}
+              Service Provider: {order.service?.serviceprovidername || "N/A"}
             </Text>
             <br />
-            <Text>Email: {order.service.serviceprovideremail || "N/A"}</Text>
+            <Text>Email: {order.service?.serviceprovideremail || "N/A"}</Text>
             <br />
-            <Text>Phone: {order.service.serviceproviderphone || "N/A"}</Text>
+            <Text>Phone: {order.service?.serviceproviderphone || "N/A"}</Text>
             <br />
-            <Text>Price: Rs.{order.price || "N/A"}</Text>
+            <Text>Price: Rs.{order?.price || "N/A"}</Text>
           </Col>
           <Col span={12}>
             <Title level={5}>order Details</Title>
-            <Text>Status: {order.status || "N/A"}</Text>
+            <Text>Status: {order?.status || "N/A"}</Text>
             <br />
             <Text>
-              Date: {new Date(order.createdAt).toLocaleString() || "N/A"}
+              Date: {new Date(order?.createdAt).toLocaleString() || "N/A"}
             </Text>
             <br />
-            <Text>Location: {order.location || "N/A"}</Text>
+            <Text>Location: {order?.location || "N/A"}</Text>
             <br />
           </Col>
         </Row>
@@ -85,13 +85,13 @@ const OrderDetails = () => {
         <Row gutter={16}>
           <Col span={24}>
             <Title level={5}>Organization Details</Title>
-            <Text>Name: {order.org.nameOrg || "N/A"}</Text>
+            <Text>Name: {order?.org?.nameOrg || "N/A"}</Text>
             <br />
-            <Text>Address: {order.org.address || "N/A"}</Text>
+            <Text>Address: {order?.org?.address || "N/A"}</Text>
             <br />
-            <Text>Contact Person: {order.org.contactPerson || "N/A"}</Text>
+            <Text>Contact Person: {order?.org?.contactPerson || "N/A"}</Text>
             <br />
-            <Text>Rating: {order.org.rating || "N/A"}</Text>
+            <Text>Rating: {order?.org?.rating || "N/A"}</Text>
           </Col>
         </Row>
       </Card>

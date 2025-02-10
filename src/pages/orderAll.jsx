@@ -90,10 +90,10 @@ const OrderAll = () => {
             allowClear
           >
             <Select.Option value="Requested">Requested</Select.Option>
-            <Select.Option value="Pending">Pending</Select.Option>
-            <Select.Option value="Approved">Approved</Select.Option>
+            <Select.Option value="Accepted">Accepted</Select.Option>
+            <Select.Option value="Declined">Declined</Select.Option>
             <Select.Option value="Rejected">Rejected</Select.Option>
-            <Select.Option value="Not Requested">Not Requested</Select.Option>
+            <Select.Option value="Completed">Completed</Select.Option>
           </Select>
 
           {/* <Select
